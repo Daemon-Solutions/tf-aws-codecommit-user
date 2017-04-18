@@ -14,7 +14,7 @@ resource "aws_iam_user_policy_attachment" "codecommitro-attach" {
   count = "${var.read_only ? 1 : 0}"
 
   user       = "${aws_iam_user.user.name}"
-  policy_arn = "arn:aws:iam::aws:policy/AWSCodeCommitReadOnlyAccess"
+  policy_arn = "arn:aws:iam::aws:policy/AWSCodeCommitReadOnly"
 }
 
 resource "aws_iam_user_policy_attachment" "iamssh-attach" {
