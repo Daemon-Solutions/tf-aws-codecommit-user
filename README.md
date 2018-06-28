@@ -2,17 +2,19 @@
 
 CodeCommit User - Terraform Module
 
-Creates an IAM user with SSH access to all CodeCommit repositories in the account.
+Creates an IAM user with SSH read/write access to defined repositories in the account.
 
 ## Usage
 
 ```js
 module "cc-user" {
-  source    = "git::ssh://git@gogs.bashton.net/Bashton-Terraform-Modules/tf-aws-codecommit-user.git"
+  source      = "git::ssh://git@gogs.bashton.net/Bashton-Terraform-Modules/tf-aws-codecommit-user.git"
 
-  user_name = "mike"
-  user_key  = "ssh-rsa AAAA<snip/>== mike@bashton.com"
-  read_only = "false"
+  user_name   = "mike"
+  user_key    = "ssh-rsa AAAA<snip/>== mike@bashton.com"
+
+  write_repos = "${aws_codecommit_repository.repo-1.arn}"
+  read_repos  = "${aws_codecommit_repository.repo-2.arn}"
 }
 ```
 
@@ -22,7 +24,8 @@ Variables marked with an * are mandatory, the others have sane defaults and can 
 
 - `user_name`* - Name of the IAM user
 - `user_key`* - User's public SSH key
-- `read_only` - (*default*: `false`) User's access level to the repositories
+- `write_repos`- ARN(s) of repositories to grant write access to
+- `read_repos`- ARN(s) of repositories to grant read access to
 
 
 ## Outputs
@@ -32,4 +35,3 @@ Variables marked with an * are mandatory, the others have sane defaults and can 
 # TODO
 
  - Multi-user support using maps
- - Repository restrictions
