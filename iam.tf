@@ -8,7 +8,6 @@ resource "aws_iam_policy" "write_access" {
 }
 
 data "aws_iam_policy_document" "write_access_doc" {
-  count = "${length(var.write_repos)}"
 
   statement {
     effect = "Allow"
@@ -41,7 +40,6 @@ resource "aws_iam_policy" "write_access_policy" {
 }
 
 data "aws_iam_policy_document" "write_access_policy_doc" {
-  count = "${length(var.write_repos) >= 1 ? 1 : 0}"
 
   statement = {
     sid    = "CloudWatchEventsCodeCommitRulesAccess"
@@ -190,7 +188,6 @@ resource "aws_iam_policy" "read_access" {
 }
 
 data "aws_iam_policy_document" "read_access_doc" {
-  count = "${length(var.read_repos)}"
 
   statement = {
     effect = "Allow"
@@ -218,7 +215,6 @@ resource "aws_iam_policy_attachment" "read_access_attach" {
 }
 
 data "aws_iam_policy_document" "read_access_policy_doc" {
-  count = "${length(var.read_repos) >= 1 ? 1 : 0}"
 
   statement = {
     sid    = "CloudWatchEventsCodeCommitRulesReadOnlyAccess"
