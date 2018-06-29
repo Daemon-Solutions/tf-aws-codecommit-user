@@ -1,7 +1,7 @@
 resource "aws_iam_policy" "write_access" {
   count = "${length(var.write_repos)}"
 
-  name = "cc-write-${random_id.id.hex}"
+  name = "cc-write-${random_id.id.hex}-${count.index}"
   path = "/"
 
   policy = "${element(data.aws_iam_policy_document.write_access_doc.*.json, count.index)}"
@@ -183,7 +183,7 @@ resource "aws_iam_policy_attachment" "write_access_policy_attach" {
 resource "aws_iam_policy" "read_access" {
   count = "${length(var.read_repos)}"
 
-  name = "cc-read-${count.index}"
+  name = "cc-read-${random_id.id.hex}-${count.index}"
   path = "/"
 
   policy = "${element(data.aws_iam_policy_document.read_access_doc.*.json, count.index)}"
