@@ -190,7 +190,7 @@ resource "aws_iam_policy" "read_access" {
 }
 
 data "aws_iam_policy_document" "read_access_doc" {
-  count = "${length(var.write_repos)}"
+  count = "${length(var.read_repos)}"
 
   statement = {
     effect = "Allow"
@@ -204,7 +204,7 @@ data "aws_iam_policy_document" "read_access_doc" {
     ]
 
     resources = [
-      "${element(var.write_repos, count.index)}",
+      "${element(var.read_repos, count.index)}",
     ]
   }
 }
