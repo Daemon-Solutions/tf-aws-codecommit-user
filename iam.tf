@@ -3,7 +3,7 @@ resource "aws_iam_policy" "write_access" {
   name        = "cc-write-${random_id.id.hex}"
   description = "CodeCommit write policy for user ${var.user_name}"
   path        = "/"
-  policy      = "${element(data.aws_iam_policy_document.write_access_doc.*.json, count.index)}"
+  policy      = "${data.aws_iam_policy_document.write_access_doc.json}"
 }
 
 data "aws_iam_policy_document" "write_access_doc" {
@@ -24,7 +24,7 @@ resource "aws_iam_policy_attachment" "write_access_attach" {
   count      = "${local.write_repos_enabled}"
   name       = "cc-write-attach-${random_id.id.hex}"
   users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.write_access.*.arn, count.index)}"
+  policy_arn = "${aws_iam_policy.write_access.arn}"
 }
 
 resource "aws_iam_policy" "write_access_policy" {
@@ -32,7 +32,7 @@ resource "aws_iam_policy" "write_access_policy" {
   name        = "cc-write-access-policy-${random_id.id.hex}"
   description = "CodeCommit Cloudwatch policy for user ${var.user_name}"
   path        = "/"
-  policy      = "${element(data.aws_iam_policy_document.write_access_policy_doc.*.json, count.index)}"
+  policy      = "${data.aws_iam_policy_document.write_access_policy_doc.json}"
 }
 
 data "aws_iam_policy_document" "write_access_policy_doc" {
@@ -171,7 +171,7 @@ resource "aws_iam_policy_attachment" "write_access_policy_attach" {
   count      = "${local.write_repos_enabled}"
   name       = "cc-write-access-policy-attach-${random_id.id.hex}"
   users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.write_access_policy.*.arn, count.index)}"
+  policy_arn = "${aws_iam_policy.write_access_policy.arn}"
 }
 
 resource "aws_iam_policy" "read_access" {
@@ -179,7 +179,7 @@ resource "aws_iam_policy" "read_access" {
   name        = "cc-read-${random_id.id.hex}"
   description = "CodeCommit read policy for user ${var.user_name}"
   path        = "/"
-  policy      = "${element(data.aws_iam_policy_document.read_access_doc.*.json, count.index)}"
+  policy      = "${data.aws_iam_policy_document.read_access_doc.json}"
 }
 
 data "aws_iam_policy_document" "read_access_doc" {
@@ -204,7 +204,7 @@ resource "aws_iam_policy_attachment" "read_access_attach" {
   count      = "${local.read_repos_enabled}"
   name       = "cc-read-attach-${random_id.id.hex}"
   users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.read_access.*.arn, count.index)}"
+  policy_arn = "${aws_iam_policy.read_access.arn}"
 }
 
 data "aws_iam_policy_document" "read_access_policy_doc" {
@@ -288,12 +288,12 @@ resource "aws_iam_policy" "read_access_policy" {
   name        = "cc-read-access-policy-${random_id.id.hex}"
   description = "CodeCommit CloudWatch read policy for user ${var.user_name}"
   path        = "/"
-  policy      = "${element(data.aws_iam_policy_document.read_access_policy_doc.*.json, count.index)}"
+  policy      = "${data.aws_iam_policy_document.read_access_policy_doc.json}"
 }
 
 resource "aws_iam_policy_attachment" "read_access_policy_attach" {
   count      = "${local.read_repos_enabled}"
   name       = "cc-read-access-policy-${random_id.id.hex}"
   users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.read_access_policy.*.arn, count.index)}"
+  policy_arn = "${aws_iam_policy.read_access_policy.arn}"
 }
