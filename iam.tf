@@ -1,14 +1,14 @@
 resource "aws_iam_policy" "write_access" {
-  count = "${length(var.write_repos)}"
+  count = length(var.write_repos)
 
   name = "cc-write-${random_id.id.hex}-${count.index}"
   path = "/"
 
-  policy = "${element(data.aws_iam_policy_document.write_access_doc.*.json, count.index)}"
+  policy = element(data.aws_iam_policy_document.write_access_doc.*.json, count.index)
 }
 
 data "aws_iam_policy_document" "write_access_doc" {
-  count = "${length(var.write_repos)}"
+  count = length(var.write_repos)
 
   statement {
     effect = "Allow"
@@ -18,32 +18,32 @@ data "aws_iam_policy_document" "write_access_doc" {
     ]
 
     resources = [
-      "${element(var.write_repos, count.index)}",
+      element(var.write_repos, count.index),
     ]
   }
 }
 
 resource "aws_iam_policy_attachment" "write_access_attach" {
-  count = "${length(var.write_repos)}"
+  count = length(var.write_repos)
 
   name       = "cc-write-attach-${random_id.id.hex}-${count.index}"
-  users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.write_access.*.arn, count.index)}"
+  users      = [aws_iam_user.user.name]
+  policy_arn = element(aws_iam_policy.write_access.*.arn, count.index)
 }
 
 resource "aws_iam_policy" "write_access_policy" {
-  count = "${length(var.write_repos) >= 1 ? 1 : 0}"
+  count = length(var.write_repos) >= 1 ? 1 : 0
 
   name = "cc-write-access-policy-${random_id.id.hex}"
   path = "/"
 
-  policy = "${data.aws_iam_policy_document.write_access_policy_doc.json}"
+  policy = data.aws_iam_policy_document.write_access_policy_doc[0].json
 }
 
 data "aws_iam_policy_document" "write_access_policy_doc" {
-  count = "${length(var.write_repos) >= 1 ? 1 : 0}"
+  count = length(var.write_repos) >= 1 ? 1 : 0
 
-  statement = {
+  statement {
     sid    = "CloudWatchEventsCodeCommitRulesAccess"
     effect = "Allow"
 
@@ -95,7 +95,7 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "LambdaReadOnlyListAccess"
     effect = "Allow"
 
@@ -108,7 +108,7 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMReadOnlyListAccess"
     effect = "Allow"
 
@@ -121,7 +121,7 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMReadOnlyConsoleAccess"
     effect = "Allow"
 
@@ -138,7 +138,7 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMUserSSHKeys"
     effect = "Allow"
 
@@ -155,7 +155,7 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMSelfManageServiceSpecificCredentials"
     effect = "Allow"
 
@@ -173,26 +173,26 @@ data "aws_iam_policy_document" "write_access_policy_doc" {
 }
 
 resource "aws_iam_policy_attachment" "write_access_policy_attach" {
-  count = "${length(var.write_repos) >= 1 ? 1 : 0}"
+  count = length(var.write_repos) >= 1 ? 1 : 0
 
   name       = "cc-write-access-policy-attach-${random_id.id.hex}"
-  users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${aws_iam_policy.write_access_policy.arn}"
+  users      = [aws_iam_user.user.name]
+  policy_arn = aws_iam_policy.write_access_policy[0].arn
 }
 
 resource "aws_iam_policy" "read_access" {
-  count = "${length(var.read_repos)}"
+  count = length(var.read_repos)
 
   name = "cc-read-${random_id.id.hex}-${count.index}"
   path = "/"
 
-  policy = "${element(data.aws_iam_policy_document.read_access_doc.*.json, count.index)}"
+  policy = element(data.aws_iam_policy_document.read_access_doc.*.json, count.index)
 }
 
 data "aws_iam_policy_document" "read_access_doc" {
-  count = "${length(var.read_repos)}"
+  count = length(var.read_repos)
 
-  statement = {
+  statement {
     effect = "Allow"
 
     actions = [
@@ -204,23 +204,23 @@ data "aws_iam_policy_document" "read_access_doc" {
     ]
 
     resources = [
-      "${element(var.read_repos, count.index)}",
+      element(var.read_repos, count.index),
     ]
   }
 }
 
 resource "aws_iam_policy_attachment" "read_access_attach" {
-  count = "${length(var.read_repos)}"
+  count = length(var.read_repos)
 
   name       = "cc-read-attach-${random_id.id.hex}-${count.index}"
-  users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${element(aws_iam_policy.read_access.*.arn, count.index)}"
+  users      = [aws_iam_user.user.name]
+  policy_arn = element(aws_iam_policy.read_access.*.arn, count.index)
 }
 
 data "aws_iam_policy_document" "read_access_policy_doc" {
-  count = "${length(var.read_repos) >= 1 ? 1 : 0}"
+  count = length(var.read_repos) >= 1 ? 1 : 0
 
-  statement = {
+  statement {
     sid    = "CloudWatchEventsCodeCommitRulesReadOnlyAccess"
     effect = "Allow"
 
@@ -234,7 +234,7 @@ data "aws_iam_policy_document" "read_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "SNSSubscriptionAccess"
     effect = "Allow"
 
@@ -249,9 +249,9 @@ data "aws_iam_policy_document" "read_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "LambdaReadOnlyListAccess"
-    effect = "allow"
+    effect = "Allow"
 
     actions = [
       "lambda:ListFunctions",
@@ -262,9 +262,9 @@ data "aws_iam_policy_document" "read_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMReadOnlyListAccess"
-    effect = "allow"
+    effect = "Allow"
 
     actions = [
       "iam:ListUsers",
@@ -275,7 +275,7 @@ data "aws_iam_policy_document" "read_access_policy_doc" {
     ]
   }
 
-  statement = {
+  statement {
     sid    = "IAMReadOnlyConsoleAccess"
     effect = "Allow"
 
@@ -294,18 +294,18 @@ data "aws_iam_policy_document" "read_access_policy_doc" {
 }
 
 resource "aws_iam_policy" "read_access_policy" {
-  count = "${length(var.read_repos) >= 1 ? 1 : 0}"
+  count = length(var.read_repos) >= 1 ? 1 : 0
 
   name = "cc-read-access-policy-${random_id.id.hex}"
   path = "/"
 
-  policy = "${data.aws_iam_policy_document.read_access_policy_doc.json}"
+  policy = data.aws_iam_policy_document.read_access_policy_doc[0].json
 }
 
 resource "aws_iam_policy_attachment" "read_access_policy_attach" {
-  count = "${length(var.read_repos) >= 1 ? 1 : 0}"
+  count = length(var.read_repos) >= 1 ? 1 : 0
 
   name       = "cc-read-access-policy-${random_id.id.hex}"
-  users      = ["${aws_iam_user.user.name}"]
-  policy_arn = "${aws_iam_policy.read_access_policy.arn}"
+  users      = [aws_iam_user.user.name]
+  policy_arn = aws_iam_policy.read_access_policy[0].arn
 }
